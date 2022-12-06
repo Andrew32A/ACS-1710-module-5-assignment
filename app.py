@@ -1,5 +1,4 @@
 from flask import Flask, request, redirect, render_template, url_for
-# from flask_pymongo import PyMongo
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 
@@ -8,10 +7,6 @@ from bson.objectid import ObjectId
 ############################################################
 
 app = Flask(__name__)
-
-# app.config["MONGO_URI"] = "mongodb://localhost:27017/plantsDatabase"
-# mongo = PyMongo(app)
-
 client = MongoClient("localhost", 27017)
 plants = client.plants_database.plants
 harvests = client.plants_databse.harvests
@@ -44,11 +39,16 @@ def create():
     if request.method == 'POST':
         # TODO: Get the new plant's name, variety, photo, & date planted, and 
         # store them in the object below.
+        name = request.form.get("plant_name")
+        variety = request.form.get("variety")
+        photo = request.form.get("photo")
+        date_planted = request.form.get("date_planted")
+
         new_plant = {
-            'name': request.form["plant_name"],
-            'variety': request.form["variety"],
-            'photo_url': request.form["photo"],
-            'date_planted': request.form["date_planted"]
+            'name': name,
+            'variety': variety,
+            'photo_url': photo,
+            'date_planted': date_planted
         }
         # TODO: Make an `insert_one` database call to insert the object into the
         # database's `plants` collection, and get its inserted id. Pass the 
@@ -66,17 +66,17 @@ def detail(plant_id):
 
     # TODO: Replace the following line with a database call to retrieve *one*
     # plant from the database, whose id matches the id passed in via the URL.
-    plant_to_show = ''
+    plant_to_show = plants.find_one({"_id": ObjectId(plant_id)})
 
     # TODO: Use the `find` database operation to find all harvests for the
     # plant's id.
     # HINT: This query should be on the `harvests` collection, not the `plants`
     # collection.
-    harvests = ''
+    harvests_to_find = harvests.find()
 
     context = {
         'plant' : plant_to_show,
-        'harvests': harvests
+        'harvests': harvests_to_find
     }
     return render_template('detail.html', **context)
 
@@ -85,23 +85,27 @@ def harvest(plant_id):
     """
     Accepts a POST request with data for 1 harvest and inserts into database.
     """
+    quantity = request.form.get("harvested_amount")
+    date = request.form.get("date_planted")
 
     # TODO: Create a new harvest object by passing in the form data from the
     # detail page form.
     new_harvest = {
-        'quantity': '', # e.g. '3 tomatoes'
-        'date': '',
+        'quantity': quantity, # e.g. '3 tomatoes'
+        'date': date,
         'plant_id': plant_id
     }
 
     # TODO: Make an `insert_one` database call to insert the object into the 
     # `harvests` collection of the database.
+    harvests.insert_one(new_harvest)
 
     return redirect(url_for('detail', plant_id=plant_id))
 
 @app.route('/edit/<plant_id>', methods=['GET', 'POST'])
 def edit(plant_id):
     """Shows the edit page and accepts a POST request with edited data."""
+    
     if request.method == 'POST':
         # TODO: Make an `update_one` database call to update the plant with the
         # given id. Make sure to put the updated fields in the `$set` object.
