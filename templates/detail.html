@@ -12,9 +12,9 @@
 #}
 
 <main>
-        <h1>Tomato</h1>
+        <h1>{{plant.name}}</h1>
 
-        <img src="https://www.almanac.com/sites/default/files/styles/primary_image_in_article/public/image_nodes/tomatoes_helios4eos_gettyimages-edit.jpeg?itok=4KrW14a4">
+        <img src="{{plant.photo_url}}">
 
         
 
@@ -59,7 +59,7 @@
 
             <ul>
                 {% for harvest in harvests %}
-                    <li>{{harvest.date}} {{harvest.quantity}}</li>
+                    <li>{{harvest.date}}: {{harvest.quantity}}</li>
 
                 {% endfor %}
 

@@ -9,7 +9,7 @@ from bson.objectid import ObjectId
 app = Flask(__name__)
 client = MongoClient("localhost", 27017)
 plants = client.plants_database.plants
-harvests = client.plants_databse.harvests
+harvests = client.plants_database.harvests
 
 ############################################################
 # ROUTES
