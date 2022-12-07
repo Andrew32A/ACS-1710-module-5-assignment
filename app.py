@@ -138,9 +138,12 @@ def edit(plant_id):
 def delete(plant_id):
     # TODO: Make a `delete_one` database call to delete the plant with the given
     # id.
-
+    delete_plant = plants.delete_one({"_id": ObjectId(plant_id)})
     # TODO: Also, make a `delete_many` database call to delete all harvests with
     # the given plant id.
+    delete_all_harvests = harvests.find({"plant_id": (plant_id)})
+    for item in delete_all_harvests:
+        harvests.delete_one(item)
 
     return redirect(url_for('plants_list'))
 
