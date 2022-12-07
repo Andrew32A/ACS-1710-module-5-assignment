@@ -29,7 +29,7 @@
             {{plant.variety}}
             <br><br>
 
-            <a class="nav" href="/edit/{{plant._id}}}">Edit Plant</a><br><br>
+            <a class="nav" href="/edit/{{plant._id}}">Edit Plant</a><br><br>
         </section>
 
         <form action="/harvest/{{plant._id}}" method="POST">
@@ -58,8 +58,11 @@
             <h3>Harvest History</h3>
 
             <ul>
-                <li>5/15/2020: Harvested 3 tomatoes</li>
-                <li>5/18/2020: Harvested 2 tomatoes</li>
+                {% for harvest in harvests %}
+                    <li>{{harvest.date}} {{harvest.quantity}}</li>
+
+                {% endfor %}
+
             </ul>
         </section>
 

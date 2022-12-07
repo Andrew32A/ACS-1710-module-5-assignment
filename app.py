@@ -100,7 +100,7 @@ def harvest(plant_id):
     # `harvests` collection of the database.
     harvested_plants = harvests.insert_one(new_harvest)
 
-    return redirect(url_for('detail', plant_id=harvested_plants))
+    return redirect(url_for('detail', plant_id=plant_id))
 
 @app.route('/edit/<plant_id>', methods=['GET', 'POST'])
 def edit(plant_id):
@@ -120,9 +120,9 @@ def edit(plant_id):
             "date_planted": date_planted
         }
         new_edit = {"$set": edit_plant}
-        edited_plant = plants.update_one({"_id": ObjectId(plant_id)}, new_edit)
+        plants.update_one({"_id": ObjectId(plant_id)}, new_edit)
         
-        return redirect(url_for('detail', plant_id=edited_plant))
+        return redirect(url_for('detail', plant_id=plant_id))
     else:
         # TODO: Make a `find_one` database call to get the plant object with the
         # passed-in _id.
